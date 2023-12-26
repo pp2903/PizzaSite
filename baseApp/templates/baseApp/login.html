@@ -1,0 +1,30 @@
+{% extends 'baseApp/index.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="signUpBody">
+  <!-- <h2 id="signInText">Sign Up</h2> -->
+
+  <img class="pizza-vector" src="{% static 'baseApp/images/signup-vector.png' %}" alt="pizza image">
+  
+  <div class="form-body">
+
+    <form action="" method="POST">
+      {% csrf_token %}
+      <legend>Log In!!</legend>
+      {{form.as_p}}
+
+      <input class='btn btn-success submit-button' type="submit">
+  
+    </form>
+    <small>New User? <a href="{% url 'signup-page' %}">Sign Up!</a> </small>
+
+  </div>
+  
+  
+ 
+</div>
+
+
+{% endblock content %}
