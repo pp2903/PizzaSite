@@ -85,6 +85,19 @@ $(document).ready(()=>{
     //social logo animations
     
    
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
     

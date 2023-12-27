@@ -93,17 +93,10 @@ hr{
 .pizza-vector{
     margin-left: 10%;
     margin-top: 5%;
-    width: 28%;
+    width: 50%;
     opacity: 0;
-    display: inline;
 }
 
-.signUpBody{
-    position:relative;
-    
-    
-    /* display: inline-block; */
-}
 
 #signInText{
     position: absolute;
@@ -220,7 +213,7 @@ ul{
 
 .card{
     margin: 12px;
-    margin-left: 55px;
+    
 }
 
 .row{

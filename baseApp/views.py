@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect    
 from .forms import UserRegistrationForm
 from django.contrib.auth.decorators import login_required
 from .models import Pizza
+from verify_email.email_handler import send_verification_email
+from django. contrib import messages
 
+from django.contrib.auth import logout
 # Create your views here.
 def index(request):
 
@@ -28,7 +31,9 @@ def signUp(request):
     if(request.method=="POST"):
         form = UserRegistrationForm(request.POST)
         if(form.is_valid()):
-            form.save()
+            inactive_user = send_verification_email(request, form)
+            return redirect('login-page')
+        
     
     return render(request,'baseApp/signUp.html',context = context)
 
@@ -39,9 +44,17 @@ def login(request):
     # form = 
     return render(request,'baseApp/login.html')
 
+
+def logoutView(request):
+    logout(request)
+    return redirect("home-page")
+
 @login_required
 def checkout(request):
+    pass
 
-    return render(request, "baseApp/checkout.html")
+
+
+
 
     

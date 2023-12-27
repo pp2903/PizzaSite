@@ -8,7 +8,7 @@ urlpatterns = [
     path("order/",base_views.menu,name="menu-page"),
     path("signup/",base_views.signUp,name="signup-page"),
     path("login/",views.LoginView.as_view(template_name="baseApp/login.html"),name="login-page"),
-    path("logout/",views.LogoutView.as_view(template_name="baseApp/logout.html"),name="logout-page"),
+    path("logout/",base_views.logoutView,name="logout-page"),
     path("checkout/",base_views.checkout,name="checkout-page"),
 
 ]

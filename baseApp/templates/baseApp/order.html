@@ -6,15 +6,16 @@
 
 <div class="order-body">
   <h1 class="menu-heading">Menu <hr class="stylish-rule"></h1>
-  <div class="container menu">
+  <div class=" menu container">
       <div class="row">
 
 
         {% for pizza in pizzas %}
         
         
-        <div class="col">
-          <div class="card" style="width: 18rem;">
+        <div class="col col-lg-4 ">
+          <div class="card" >
+          {% comment %} <div class="card" style="width: 18rem;"> {% endcomment %}
               <img src="{% static pizza.image_url  %}" class="card-img-top" alt="pepperoni pizza">
               <div class="card-body">
                 <h5 class="card-title">{{ pizza.name }}</h5>

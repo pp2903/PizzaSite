@@ -1,29 +1,44 @@
-{% extends 'baseApp/index.html' %}
-{% load static %}
+{% extends 'baseApp/index.html' %} {% load static %}
+ {% load crispy_forms_tags %} 
+ {% block content %}
 
-{% block content %}
-
-<div class="signUpBody">
+<div class="container">
   <!-- <h2 id="signInText">Sign Up</h2> -->
 
-  <img class="pizza-vector" src="{% static 'baseApp/images/signup-vector.png' %}" alt="pizza image">
-  
-  <div class="form-body">
-
-    <form action="" method="POST">
-      {% csrf_token %}
-      <legend>Sign Up!!</legend>
-      {{form.as_p}}
-      <input type="submit">
-  
-    </form>
-    <small>Already a user?<a href="{% url 'login-page' %}">Login!</a></small>
-
+  <div class="row">
+    <div class="col">
+      <img
+        class="pizza-vector"
+        src="{% static 'baseApp/images/signup-vector.png' %}"
+        alt="pizza image"
+      />
+    
+    </div>
+    <div class="col">
+      <div class="form-body">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <legend>Sign Up!!</legend>
+          {{form|crispy}}
+          <input class="btn btn-success" type="submit" />
+        </form>
+        <small
+          >Already a user?<a href="{% url 'login-page' %}">Login!</a></small
+        >
+      </div>
+    </div>
+   
   </div>
-  
-  
- 
-</div>
 
+
+
+
+    
+     
+    
+     
+    
+  
+</div>
 
 {% endblock content %}
