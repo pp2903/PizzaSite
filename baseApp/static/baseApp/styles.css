@@ -14,13 +14,7 @@
     transition:  .2s;
    
 }
-#MainLogo:hover{
-    
-    
-    /* transform: scale(1.1); */
-    transform: rotate(-370deg);
-    
-}
+
 
 .car{
     padding-top:  0px;
@@ -41,10 +35,11 @@ hr{
 
 .nav-item{
     padding: 0 3% 0;
-    transition: transform .2s;
+    transition:  .5s;
+    
 }
 .nav-item:hover{
-    transform: scale(1.1);
+    transform: scale(1.08);
     
 }
 
@@ -52,9 +47,6 @@ hr{
 
 
 
-/* .nav-link{
-    font-family:  ;
-} */
 
 .navbar-brand{
     /* font-style: italic; */
@@ -288,12 +280,14 @@ legend{
 
 
 
-.cart,.navbar-profile{
-    padding-right: 10px;
-    margin-right: 40px;
-}
+
 
 .logout-heading{
     padding: 20px;
 }
 
+/* remove button */
+
+.remove-btn{
+    display: none;
+}
