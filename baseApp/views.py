@@ -1,12 +1,20 @@
-from django.shortcuts import render,redirect    
+from django.shortcuts import render,redirect,HttpResponse
 from .forms import UserRegistrationForm
 from django.contrib.auth.decorators import login_required
 from .models import Pizza
 from verify_email.email_handler import send_verification_email
 from django. contrib import messages
-
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout
+import json
+from baseApp.models import Pizza
 # Create your views here.
+
+
+
+
+
+
 def index(request):
 
     return render(request, "baseApp/index.html")
@@ -54,6 +62,39 @@ def checkout(request):
     pass
 
 
+@csrf_exempt
+def cartView(request):
+    prod_obj_arr = []
+    total_price = 0
+    if(request.method=='POST'):
+
+        # return HttpResponse("success")
+       
+        cart_items_json = request.POST.get('cart_items_json')
+        try:
+            cart_items = json.loads(cart_items_json)
+        except:
+            cart_items = []
+        
+        
+        
+        
+        prods = []
+        
+        for item in cart_items:
+
+            prod_id = int(item.lstrip('pr'))
+            pizza = Pizza.objects.get(id=prod_id)
+            prods.append(pizza)
+            total_price+= pizza.price
+        
+        return render(request,"baseApp/cart.html",{"prods":prods,"total_price":total_price})
+
+        
+        
+    print('printing from outside')
+    return render(request,"baseApp/cart.html",{"prod_obj_arr":prod_obj_arr})
+    
 
 
 

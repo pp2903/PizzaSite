@@ -1,0 +1,66 @@
+{% extends "baseApp/index.html" %} {% load static %} {% load crispy_forms_tags
+%} {% block content %}
+
+<div class="container text-center">
+  {% if prods %}
+  <div class="row border">
+    <div class="col col-8">
+      <h3 class="mx-auto p-2">Cart Items</h3>
+      <div class="container">
+        <div class="row">
+          <div class="col col-6 col-sm-6">
+            <h4>Item</h4>
+          </div>
+          <div class="col col-2 col-sm-2">
+            <h4>Quantity</h4>
+          </div>
+          <div class="col col-4 col-sm-4">
+            <h4>Price</h4>
+          </div>
+        </div>
+        {% for product in prods %}
+        <div class="row p-8">
+          <div class="col col-6 col-sm-6">
+            <p>{{ product.name }}</p>
+            <img
+              class="cart-prod-img"
+              src="{% static product.image_url %}"
+              alt=""
+            />
+          </div>
+          <div class="col col-6 col-sm-2 my-auto">
+            <select
+              id="pizza-no-{{ product.id }}"
+              class="form-select"
+              name="pizza-count"
+              aria-label="Default select example"
+            >
+              <option selected value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div class="col col-6 col-sm-4 my-auto">${{ product.price }}</div>
+        </div>
+
+        
+        {% endfor %}
+      </div>
+
+    
+    </div>
+    <div class="col col-4">
+      <h4 class="mx-auto p-2">Price details</h4>
+    </div>
+  </div>
+  {% else %}
+  <h2>Cart is empty!!</h2>
+  {% endif %}
+</div>
+
+<script>
+  console.log("{{ prod_obj_arr }}");
+</script>
+{% endblock content %}

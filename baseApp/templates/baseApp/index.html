@@ -17,7 +17,7 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg fixed-top">
       <div class="container-fluid">
         <a id="MainLogo" class="navbar-brand" href="{% url 'home-page' %}">Mark's Pizzeria </a>
         <button
@@ -68,7 +68,10 @@
             
             
           </ul>
-          <span class="navbar-profile">
+          <div class="d-flex">
+
+          
+          <span class="navbar-profile nav-item">
             <a
                 class="nav-link active dropdown-toggle"
                 href="#"
@@ -93,20 +96,20 @@
                 </li>
               </ul>
           </span>
-          <span class="">
-            <a  aria-current="page" href="{% url 'checkout-page' %}"
-                ><img src="{% static 'baseApp/images/cart.png' %}"></a
-              >
+          <span class="nav-item">       
+
+            <form action="{% url 'cart-page' %}" method="POST">
+              {% csrf_token %}
+              <input style="display: none;" value="" type="text" name="cart_items_json" id="cart_items_json">
+              <button class="cart-btn nav-link active border-0" type="submit">Cart</button>
+            </form>
+
+
+           {% comment %} href="{% url 'cart-page' %}" 
+                <img src="{% static 'baseApp/images/cart.png' %}"> {% endcomment %}
           </span>
-          {% comment %} <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Find your pizza!"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-dark" type="submit">Search</button>
-          </form> {% endcomment %}
+         </div>
+          
         </div>
       </div>
     </nav>
@@ -283,5 +286,18 @@
       crossorigin="anonymous"
     ></script>
     <script src=" {% static "baseApp/scripts.js" %}"></script>
+    <script>
+
+      
+
+
+     
+
+
+
+
+
+
+    </script>
   </body>
 </html>
