@@ -101,7 +101,7 @@
             <form action="{% url 'cart-page' %}" method="POST">
               {% csrf_token %}
               <input style="display: none;" value="" type="text" name="cart_items_json" id="cart_items_json">
-              <button class="cart-btn nav-link active border-0" type="submit">Cart</button>
+              <button id="cart-btn" class="cart-btn nav-link active border-0" type="submit">Cart</button>
             </form>
 
 
@@ -285,13 +285,14 @@
       integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
       crossorigin="anonymous"
     ></script>
-    <script src=" {% static "baseApp/scripts.js" %}"></script>
+    <script src="{% static 'baseApp/scripts.js' %}"></script>
     <script>
 
       
-
-
-     
+      
+      {% block scripts %}
+      
+      {% endblock scripts %}
 
 
 
