@@ -74,26 +74,39 @@ def cartView(request):
         try:
             cart_items = json.loads(cart_items_json)
         except:
-            cart_items = []
-        
+            cart_items = []     
         
         
         
         prods = []
-        
-        for item in cart_items:
+        if(cart_items != None):
+            
+            for item in cart_items:
 
-            prod_id = int(item.lstrip('pr'))
-            pizza = Pizza.objects.get(id=prod_id)
-            prods.append(pizza)
-            total_price+= pizza.price
-        
-        return render(request,"baseApp/cart.html",{"prods":prods,"total_price":total_price})
+                prod_id = int(item.lstrip('pr'))
+                pizza = Pizza.objects.get(id=prod_id)
+                prods.append(pizza)
+                
+
+            
+            prods = list(set(prods))
+            for prod in prods:
+                total_price+=prod.price
+            
+            print("CART VIEW TRIGGERED")
+            return render(request,"baseApp/cart.html",{"prods":prods,"total_price":total_price})
 
         
         
     print('printing from outside')
     return render(request,"baseApp/cart.html",{"prod_obj_arr":prod_obj_arr})
+
+
+
+def updateCart(request):
+    
+    
+    pass
     
 
 

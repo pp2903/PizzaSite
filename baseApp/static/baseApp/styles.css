@@ -311,3 +311,9 @@ legend{
     background-color: rgb(69, 127, 27);
     color:white
 }
+
+@media (max-width: 770px) and (max-height: 830px) {
+    .cart-subheadings {
+        display: none;
+    }
+}

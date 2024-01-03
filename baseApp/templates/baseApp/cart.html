@@ -1,13 +1,13 @@
 {% extends "baseApp/index.html" %} {% load static %} {% load crispy_forms_tags
 %} {% block content %}
 
-<div class="container text-center">
+<div class="container-md-fluid text-center">
   {% if prods %}
-  <div class="row border">
+  <div class="row border justify-content-center">
     <div class="col col-8">
       <h3 class="mx-auto p-2">Cart Items</h3>
       <div class="container">
-        <div class="row cart-subheading-row">
+        <div class="row cart-subheading-row d-none d-md-flex">
           <div class="col col-6 col-sm-6">
             <h4>Item</h4>
           </div>
@@ -19,7 +19,9 @@
           </div>
         </div>
         {% for product in prods %}
-        <div class="row p-8 cart-item-container">
+        <div
+          class="row p-8 cart-item-container flex-column flex-md-row d-flex align-items-center justify-content-center"
+        >
           <div class="col col-6 col-sm-6">
             <p>{{ product.name }}</p>
             <img
@@ -28,10 +30,10 @@
               alt=""
             />
           </div>
-          <div class="col col-6 col-sm-2 my-auto">
+          <div class="col col-6 col-sm-2 my-auto text-center">
             <select
-              id="pizza-no-{{ product.id }}"
-              class="form-select cart-item-qty"
+              id="pizza-qty-{{ product.id }}"
+              class="form-select cart-item-qty my-2"
               name="pizza-count"
               aria-label="Default select example"
             >
@@ -48,10 +50,7 @@
               >Remove</a
             >
           </div>
-          <div id="pr{{ product.id }}" class="item-price col col-6 col-sm-4 my-auto">
-
-
-            
+          <div id="" class="item-price col col-6 col-sm-4 my-auto">
             ${{ product.price }}
           </div>
         </div>
@@ -67,10 +66,23 @@
       >
         Total amount:
 
-        <strong>$ {{ total_price }}</strong>
+        <strong id="total-price-cart">$ {{ total_price }}</strong>
       </div>
+      <form action="" method="POST">
+        {% csrf_token %}
 
-      <button class="btn btn-success my-4 mx-1">Checkout</button>
+        <input
+          type="text"
+          style="display: none"
+          name="order_items_json"
+          id="order_items_json"
+          value=""
+        />
+
+        <button type="submit" class="btn btn-success my-4 mx-1">
+          Checkout
+        </button>
+      </form>
       <a id="clear-cart-btn" href="#!" class="btn btn-danger my-4 mx-1"
         >Clear Cart</a
       >
@@ -81,40 +93,39 @@
   {% endif %}
 </div>
 
+{% endblock content %} {% block scripts %}
+
+<script>
+
+  var cart = JSON.parse(localStorage.getItem("cart"))
+  console.log(cart)
+  if(!localStorage.getItem("cartItems")){
+    var cartItems = []
+
+    {% for prod in prods %}
+
+    if (cart["pr"+{{ prod.id }}]){
+
+      
+      var obj = {
+        id: {{ prod.id }},
+        qty: 1,
+        price:{{ prod.price }}
+      }
+      
+      cartItems.push(obj)
+    }
+    {% endfor %}
+
+    console.log(cartItems)
 
 
-
-
-{% endblock content %}
-
-
-{% block scripts %}
-
-
-let cart_items_obj = JSON.parse(localStorage.getItem("cart"));
-var items_array  = []
-
-
-for (var key in cart_items_obj){
-
-  let p_id = "#"+key;
-  let cost = parseInt($(p_id).text().trim().substring(1));
-  
-
-  let obj = {
-    item: key,
-    qty:1,
-    price:cost
-  };
-
-  items_array.push(obj);
-  
-}
-
-console.log(items_array)
-
-
-
-
+    localStorage.setItem("cartItems",JSON.stringify(cartItems))
+    }
+    else{
+      var cartItems = JSON.parse(localStorage.getItem("cartItems"))
+    }
+</script>
+<script src="{% static 'baseApp/cart-page-scripts.js' %}"></script>
 
 {% endblock scripts %}
