@@ -34,8 +34,8 @@ class Order(models.Model):
     street = models.CharField(max_length = 50)
     city = models.CharField(max_length = 50)
     state = models.CharField(max_length = 50)
-    zipcode = models.CharField(max_length = 6, help_text = "Zipcode")
-    phone_number = models.CharField(max_length = 999999, help_text = "Phone")
+    zipcode = models.CharField(max_length = 6)
+    phone_number = models.CharField(max_length = 999999)
     
     
     

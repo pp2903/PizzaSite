@@ -138,9 +138,9 @@ $(document).ready(() => {
     removefromCart(prod_id);
   });
 
-    
 
 
+  
 
 
   // change the state of add to cart buttons to added

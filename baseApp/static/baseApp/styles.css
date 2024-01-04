@@ -44,8 +44,13 @@ hr{
 }
 
 
+.asteriskField {
+    display: none;
+}
 
-
+label{
+    display: table;
+}
 
 
 .navbar-brand{
@@ -316,4 +321,9 @@ legend{
     .cart-subheadings {
         display: none;
     }
+
+    .order_form{
+        margin:  0px 40px;
+    }
 }
+

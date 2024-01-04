@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,HttpResponse
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm, OrderForm
 from django.contrib.auth.decorators import login_required
 from .models import Pizza
 from verify_email.email_handler import send_verification_email
@@ -57,15 +57,25 @@ def logoutView(request):
     logout(request)
     return redirect("home-page")
 
-@login_required
+
 def checkout(request):
-    pass
+    if(request.method == "POST"):
+        print('POST request executed')
+        print(request.POST)
+        order_items_json = json.loads(request.POST.get('order_items_json'))
+        print(order_items_json)
+        order_total = 0
+        for item in order_items_json:
+            order_total+= int(item['qty']) * item['price']
+        print("Order total: ", order_total)
+        return redirect('home-page')
 
 
 @csrf_exempt
 def cartView(request):
     prod_obj_arr = []
     total_price = 0
+    form   = OrderForm()
     if(request.method=='POST'):
 
         # return HttpResponse("success")
@@ -93,8 +103,7 @@ def cartView(request):
             for prod in prods:
                 total_price+=prod.price
             
-            print("CART VIEW TRIGGERED")
-            return render(request,"baseApp/cart.html",{"prods":prods,"total_price":total_price})
+            return render(request,"baseApp/cart.html",{"prods":prods,"total_price":total_price,"form":form})
 
         
         
@@ -103,10 +112,13 @@ def cartView(request):
 
 
 
-def updateCart(request):
+
+    
+    # we will process the order here   
+    
+      
     
     
-    pass
     
 
 

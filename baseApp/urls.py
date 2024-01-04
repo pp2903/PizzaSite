@@ -10,6 +10,6 @@ urlpatterns = [
     path("login/",views.LoginView.as_view(template_name="baseApp/login.html"),name="login-page"),
     path("logout/",base_views.logoutView,name="logout-page"),
     path("checkout/",base_views.checkout,name="checkout-page"),
-    path("cart/",base_views.cartView, name="cart-page"),
+    path("cart/",base_views.cartView, name="cart-page"), 
 
 ]
