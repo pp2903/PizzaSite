@@ -30,7 +30,7 @@ class Pizza(models.Model):
 
 class Order(models.Model):  
     order_id = models.CharField(default=  None, unique = True, max_length = 400,blank=True,null = True)
-    user = models.ForeignKey(User,on_delete = models.CASCADE, default=None)
+    user = models.ForeignKey(User,on_delete = models.CASCADE, default=None,null = True)
     first_name = models.CharField(max_length = 50)
     last_name = models.CharField(max_length = 50)
     order_items = models.CharField(max_length = 10000)
