@@ -90,12 +90,15 @@ $(document).ready(function () {
     $("#cart-btn").click();
   });
 
+ 
+
+
   // function to call when leaving the page
   function handleBeforeUnload() {
     // Delete the item from local storage
     localStorage.removeItem("cartItems");
   }
-
+  
   // Attach the function to the beforeunload event
   window.addEventListener("beforeunload", handleBeforeUnload);
 });

@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect,HttpResponse
 from .forms import UserRegistrationForm, OrderForm
 from django.contrib.auth.decorators import login_required
-from .models import Pizza
+from django.contrib.auth.models import User
+from .models import Pizza, Order
 from verify_email.email_handler import send_verification_email
 from django. contrib import messages
 from django.views.decorators.csrf import csrf_exempt
@@ -63,11 +64,35 @@ def checkout(request):
         print('POST request executed')
         print(request.POST)
         order_items_json = json.loads(request.POST.get('order_items_json'))
-        print(order_items_json)
+        
         order_total = 0
         for item in order_items_json:
             order_total+= int(item['qty']) * item['price']
         print("Order total: ", order_total)
+        #getting the order details
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        street = request.POST.get('street')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        zipcode = request.POST.get('zipcode')
+        phone_number = request.POST.get('phone_number')
+        
+        
+        try:
+            usr_id =request.POST.get("user_id")
+            usr = User.objects.get(id= usr_id)
+            
+        except:
+            usr =None
+        Order.objects.create(user = usr,first_name=first_name,last_name=last_name,street=street,city=city,state=state,zipcode= zipcode,phone_number= phone_number,order_amount=order_total,order_items = request.POST.get('order_items_json'))
+        if usr is not None:
+            print("The user is",usr)
+        
+        
+        
+        #Create a new entry in Orders table
+        
         return redirect('home-page')
 
 

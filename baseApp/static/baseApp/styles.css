@@ -1,6 +1,11 @@
 *{
     position: relative;
+    
 }
+
+
+
+
 
 
 .description-text{
@@ -21,7 +26,6 @@
 }
 
 .navbar{
-    padding-bottom: 2%;
     background-color: beige;
     position: sticky;
     z-index: 10;
@@ -58,7 +62,6 @@ label{
     font-weight:lighter;
     font-size:200%;
     font-family: Garamond;
-    padding-right: 2%;
     /* font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
 }
 .footer{
@@ -316,7 +319,7 @@ legend{
     background-color: rgb(69, 127, 27);
     color:white
 }
-
+/* for smaller screens */
 @media (max-width: 770px) and (max-height: 830px) {
     .cart-subheadings {
         display: none;
@@ -325,5 +328,11 @@ legend{
     .order_form{
         margin:  0px 40px;
     }
+
+
+    
+
+
+
 }
 

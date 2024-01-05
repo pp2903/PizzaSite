@@ -36,6 +36,7 @@ class Order(models.Model):
     state = models.CharField(max_length = 50)
     zipcode = models.CharField(max_length = 6)
     phone_number = models.CharField(max_length = 999999)
+    paid =models.BooleanField(default = False)
     
     
     
