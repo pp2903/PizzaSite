@@ -11,5 +11,6 @@ urlpatterns = [
     path("logout/",base_views.logoutView,name="logout-page"),
     path("checkout/",base_views.checkout,name="checkout-page"),
     path("cart/",base_views.cartView, name="cart-page"), 
+    path('handlerequest/', base_views.handlerequest, name = 'handlerequest'),
 
 ]

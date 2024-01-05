@@ -150,3 +150,10 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PWD')
 
 DEFAULT_FROM_EMAIL = 'priyampranshu2903@gmail.com'
 
+
+
+#Razorpay integration
+
+
+KEY_ID = os.environ.get("KEY_ID")
+KEY_SECRET = os.environ.get("KEY_SECRET")

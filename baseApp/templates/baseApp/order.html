@@ -16,10 +16,11 @@
         <div class="col col-lg-4 ">
           <div class="card" >
           {% comment %} <div class="card" style="width: 18rem;"> {% endcomment %}
-              <img src="{% static pizza.image_url  %}" class="card-img-top" alt="pepperoni pizza">
+              <img src="{% static pizza.image_url  %}" class="card-img-top" alt="{{ pizza.name }}">
               <div class="card-body">
                 <h5 class="card-title">{{ pizza.name }}</h5>
-               
+                
+                <p  class="fs-5 fw-bold pizza-price">&#8377;{{ pizza.price }}</p>
                 <a id="pr{{pizza.id}}" href="#/"  class="btn btn-success-light buy-btn my-2">Add to cart</a> 
                 <a id="" href="#/"  class="btn btn-danger remove-btn mx-1">Remove</a>
                 <p class="d-inline description-text">
@@ -31,9 +32,9 @@
                     
                   </a>
                   <p class="collapse" id="pizza-desc{{pizza.id}}">
-                  
+                    
                     {{ pizza.description }}
-                  
+                    
                   </p>
                 </p>
                 

@@ -112,15 +112,14 @@
 
 <script>
 
-  var cart = JSON.parse(localStorage.getItem("cart"))
+  var cart = JSON.parse(localStorage.getItem("cart")) 
  
-  if(!localStorage.getItem("cartItems")){
-    var cartItems = []
-
+  if(!localStorage.getItem("cartItems") || localStorage.getItem("cartItems")==="[]"){
+    var cartItems = []    
     {% for prod in prods %}
-
+    
     if (cart["pr"+{{ prod.id }}]){
-
+      
       
       var obj = {
         id: {{ prod.id }},
@@ -133,14 +132,18 @@
     {% endfor %}
 
     
-
-
     localStorage.setItem("cartItems",JSON.stringify(cartItems))
     }
     else{
       var cartItems = JSON.parse(localStorage.getItem("cartItems"))
     }
+
+
+    
+
+
 </script>
 <script src="{% static 'baseApp/cart-page-scripts.js' %}"></script>
+
 
 {% endblock scripts %}

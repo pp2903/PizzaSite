@@ -9,15 +9,17 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout
 import json
 from baseApp.models import Pizza
+from django.contrib.sites.shortcuts import get_current_site
+from Marks_Pizzeria.settings import KEY_ID,KEY_SECRET
+import razorpay
 # Create your views here.
 
 
-
+razorpay_client= razorpay.Client(auth=(KEY_ID,KEY_SECRET))
 
 
 
 def index(request):
-
     return render(request, "baseApp/index.html")
 
 
@@ -58,9 +60,10 @@ def logoutView(request):
     logout(request)
     return redirect("home-page")
 
-
+#for checkout and payment process
 def checkout(request):
     if(request.method == "POST"):
+        
         print('POST request executed')
         print(request.POST)
         order_items_json = json.loads(request.POST.get('order_items_json'))
@@ -85,22 +88,33 @@ def checkout(request):
             
         except:
             usr =None
-        Order.objects.create(user = usr,first_name=first_name,last_name=last_name,street=street,city=city,state=state,zipcode= zipcode,phone_number= phone_number,order_amount=order_total,order_items = request.POST.get('order_items_json'))
+            
+        #creating a new order and giving it an order ID
+        order = Order.objects.create(user = usr,first_name=first_name,last_name=last_name,street=street,city=city,state=state,zipcode= zipcode,phone_number= phone_number,order_amount=order_total,order_items = request.POST.get('order_items_json'))
+        order.save()
         if usr is not None:
             print("The user is",usr)
         
+        currency = 'INR'
+        callback_URL = 'http://'+str(get_current_site(request))+'/handlerequest/'
+        
+        razorpay_order = razorpay_client.order.create(dict(amount=order_total*100, currency = currency,receipt = order.order_id))
+        print(razorpay_order['id'])
+        order.razorpay_order_id = razorpay_order['id']
+        order.save()
         
         
-        #Create a new entry in Orders table
-        
-        return redirect('home-page')
+        return render(request,"baseApp/paymentSummaryPage.html",{'order':order,'order_id':order.razorpay_order_id,'order_total':order_total,'KEY_ID':KEY_ID,"callback_URL":callback_URL})
 
 
 @csrf_exempt
 def cartView(request):
     prod_obj_arr = []
     total_price = 0
-    form   = OrderForm()
+    form   = OrderForm()  
+    
+    
+    
     if(request.method=='POST'):
 
         # return HttpResponse("success")
@@ -137,9 +151,25 @@ def cartView(request):
 
 
 
-
+@csrf_exempt
+def handlerequest(request):     
     
-    # we will process the order here   
+    if request.method=='POST':
+        try:
+            razorpay_order_id  = request.POST.get("razorpay_order_id","")
+            razorpay_payment_id  = request.POST.get("razorpay_payment_id","")
+            razorpay_signature  = request.POST.get("razorpay_signature","")
+            
+            order_db = Order.objects.get(razorpay_order_id = razorpay_order_id)
+            order_db.razorpay_payment_id = razorpay_payment_id
+            order_db.razorpay_signature = razorpay_signature
+            order_db.save()
+            messages.success(request,"Congratulations..!! Order Successful")
+            return redirect('home-page')
+        except:
+            
+            return HttpResponse("PAYMENT FAILURE!!")
+    
     
       
     
