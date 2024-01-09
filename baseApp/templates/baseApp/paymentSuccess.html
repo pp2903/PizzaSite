@@ -1,0 +1,117 @@
+{% extends 'baseApp/index.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="post-payment-page-heading container text-center">
+  <div class="row">
+    <div class="col col-12">
+      <h1 class="fs-1 fw-bold">ORDER SUCCESS!!</h1>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col col-12">
+      <svg
+        id="order-success-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        x="0px"
+        y="0px"
+        width="300"
+        height="300"
+        viewBox="0 0 48 48"
+        class="order-result-icon"
+      >
+        <path
+          fill="#c8e6c9"
+          d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"
+        ></path>
+        <path
+          fill="#4caf50"
+          d="M34.586,14.586l-13.57,13.586l-5.602-5.586l-2.828,2.828l8.434,8.414l16.395-16.414L34.586,14.586z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+
+
+
+  <div class="row">
+    <div class="col col-12">
+        <p>Redirecting to home in... <strong id="success-page-counter" class="counter">10</strong></p>
+    </div>
+  </div>
+
+  <div id="orderId-success" class="row">
+
+    <div class="col col-12">
+        <p class="fs-3 fw-semibold">
+
+            Order ID:  {{order_id}}
+        </p>
+        
+    </div>
+  </div>
+
+
+  <div class="d-flex justify-content-center">
+    <div class="">
+      <a id="success-pg-home-btn" class="btn btn-primary mx-2" href="{% url 'home-page' %}"> Home </a>
+    </div>
+    <div class="">
+      <a class="btn btn-success mx-2" href="{% url 'invoice' order_id %}"> Download invoice </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>   
+    
+$(window).resize(function () {
+        if ($(window).width() < 450) {
+            // Small screen
+            $("#order-success-icon").attr('height','130')
+            $("#order-success-icon").attr('width','130')
+            // $("#order-success-icon")
+            console.log("small screen")
+        } else {
+        // Large screen
+        $("#order-success-icon").attr('height','300')
+        $("#order-success-icon").attr('width','300')
+        console.log("large screen")
+    }
+});
+
+localStorage.setItem("cart",JSON.stringify({}))
+
+
+var counterValue = 10; // Initial countdown value
+var countdownInterval;
+
+       
+    function updateCounter() {
+        counterValue--;
+        $('#success-page-counter').text(counterValue);
+
+        // Check if the countdown has reached zero
+        if (counterValue === 0) {
+            clearInterval(countdownInterval); // Stop the countdown
+            window.location.href = '{% url 'home-page' %}'; // Redirect to the desired URL
+        }
+    }
+    
+    // Start the countdown
+    countdownInterval = setInterval(updateCounter, 1000); // 1000 milliseconds = 1 second
+
+
+
+</script>
+
+
+
+
+{% endblock scripts %}

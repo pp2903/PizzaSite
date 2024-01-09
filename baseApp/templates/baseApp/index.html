@@ -58,14 +58,7 @@
               <a class="nav-link active" aria-current="page" href="{% url 'logout-page' %}"
                 >Logout</a
               >
-            {% endif %}
-            
-              
-              
-              
-            
-            
-            
+            {% endif %}           
             
           </ul>
           <div class="d-flex">
@@ -101,12 +94,8 @@
             <form action="{% url 'cart-page' %}" method="POST">
               {% csrf_token %}
               <input style="display: none;" value="" type="text" name="cart_items_json" id="cart_items_json">
-              <button id="cart-btn" class="cart-btn nav-link active border-0" type="submit">Cart</button>
+              <button id="cart-btn" class="cart-btn nav-link active border-0" type="submit"><img style="width: 27px;" src="{% static 'baseApp/images/cart-icon.svg' %}" alt=""> </button>
             </form>
-
-
-           {% comment %} href="{% url 'cart-page' %}" 
-                <img src="{% static 'baseApp/images/cart.png' %}"> {% endcomment %}
           </span>
          </div>
           

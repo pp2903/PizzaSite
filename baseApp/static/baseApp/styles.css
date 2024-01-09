@@ -299,9 +299,14 @@ legend{
 
 .cart-btn{
     background: inherit;
+    margin-right: 20px;
 }
 
 
+
+#cart-empty-image{
+    width: 80%;
+}
 .cart-prod-img{
     max-width: 200px;
 }
@@ -325,11 +330,44 @@ legend{
     .order_form{
         margin:  0px 40px;
     }
-
-
     
+    #cart-empty-image{
+        width: 50%;
+    }
 
 
 
+}
+
+
+/* Payment Summary page */
+
+
+
+#payment-summary-heading{
+    font-family: serif;
+}
+
+.pizza-image-checkout{
+    max-width: 150px;
+}
+
+
+
+/* POST PAYMENT PAGE */
+
+
+.post-payment-page-heading{
+    margin-top: 30px;
+    margin-bottom: 40px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    
+    
+}
+
+
+.order-result-icon{
+    margin-top: 30px;
+    margin-bottom: 50px;
 }
 

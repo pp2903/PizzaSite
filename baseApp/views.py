@@ -12,6 +12,18 @@ from baseApp.models import Pizza
 from django.contrib.sites.shortcuts import get_current_site
 from Marks_Pizzeria.settings import KEY_ID,KEY_SECRET
 import razorpay
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+import os
+from io import BytesIO
+from Marks_Pizzeria import settings
+
+from django.core.mail import EmailMultiAlternatives
+
+
+
+
+
 # Create your views here.
 
 
@@ -67,10 +79,19 @@ def checkout(request):
         print('POST request executed')
         print(request.POST)
         order_items_json = json.loads(request.POST.get('order_items_json'))
-        
+        order_pizza_list = []
         order_total = 0
         for item in order_items_json:
+            pizza_obj = Pizza.objects.get(id=item['id'])
+            pizza_item = {
+                "name":pizza_obj.name,
+                "quantity":item['qty'],
+                "price": item['qty']*item['price'],
+                "image_url":pizza_obj.image_url
+            }
+            order_pizza_list.append(pizza_item)            
             order_total+= int(item['qty']) * item['price']
+        print(order_pizza_list)
         print("Order total: ", order_total)
         #getting the order details
         first_name = request.POST.get('first_name')
@@ -90,7 +111,7 @@ def checkout(request):
             usr =None
             
         #creating a new order and giving it an order ID
-        order = Order.objects.create(user = usr,first_name=first_name,last_name=last_name,street=street,city=city,state=state,zipcode= zipcode,phone_number= phone_number,order_amount=order_total,order_items = request.POST.get('order_items_json'))
+        order = Order.objects.create(user = usr,first_name=first_name,last_name=last_name,street=street,city=city,state=state,zipcode= zipcode,phone_number= phone_number,order_amount=order_total*100,order_items = request.POST.get('order_items_json'))
         order.save()
         if usr is not None:
             print("The user is",usr)
@@ -104,8 +125,10 @@ def checkout(request):
         order.save()
         
         
-        return render(request,"baseApp/paymentSummaryPage.html",{'order':order,'order_id':order.razorpay_order_id,'order_total':order_total,'KEY_ID':KEY_ID,"callback_URL":callback_URL})
+        return render(request,"baseApp/paymentSummaryPage.html",{'order':order,'order_id':order.razorpay_order_id,'order_total':order_total,'KEY_ID':KEY_ID,"callback_URL":callback_URL,"order_pizza_list":order_pizza_list})
 
+    
+    return render(request, "baseApp/paymentSummaryPage.html",{})
 
 @csrf_exempt
 def cartView(request):
@@ -163,19 +186,105 @@ def handlerequest(request):
             order_db = Order.objects.get(razorpay_order_id = razorpay_order_id)
             order_db.razorpay_payment_id = razorpay_payment_id
             order_db.razorpay_signature = razorpay_signature
+            order_db.paid = True
             order_db.save()
-            messages.success(request,"Congratulations..!! Order Successful")
-            return redirect('home-page')
+           
+            order_items = json.loads(order_db.order_items)
+            items= []
+            for i in order_items:
+                item_obj  ={
+                    "name":Pizza.objects.get(id=i['id']).name,
+                    "quantity":i['qty'],                    
+                    "unit_price":Pizza.objects.get(id=i['id']).price,
+                    "price":(i['price'] *i['qty'])
+                }
+                items.append(item_obj)
+            
+            
+            try:
+                to_email = order_db.user.email
+            except:
+                to_email = None
+            
+            if to_email is not None:
+                
+                pdf = render_to_pdf("baseApp/invoice.html",{"order":order_db,"items":items})             
+                filename = "Invoice__"+order_db.order_id+".pdf"
+                
+                
+                
+                mail_subject = "Order Details!"
+                email = EmailMultiAlternatives(
+                            mail_subject,
+                            "Hi, Thank you for ordering from Mark's Pizzeria!! ",       # necessary to pass some message here
+                            settings.EMAIL_HOST_USER,
+                            [to_email]
+                        )
+                email.attach(filename, pdf.getvalue(), 'application/pdf')
+                email.send(fail_silently=False)   
+     
+            
+           
+            return render(request,"baseApp/paymentSuccess.html",{"order_id":order_db.order_id})
         except:
             
-            return HttpResponse("PAYMENT FAILURE!!")
+            return render(request,"baseApp/paymentFailure.html")
     
     
-      
-    
-    
+# For converting HTML data to PDF for things like invoice generation
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)#, link_callback=fetch_resources)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
     
 
+
+# testing
+    
+def test_successPage(request):
+    return render(request,"baseApp/paymentSuccess.html")
+       
+    
+   
+    
+
+def test_failedPage(request):
+    return render(request,"baseApp/paymentFailure.html")
+
+
+def invoice_test(request):
+    return render(request,"baseApp/invoice.html")
+
+
+
+
+
+
+
+
+def invoice(request,id):   
+    
+    order = Order.objects.get(order_id=id)
+    order_items = json.loads(order.order_items)
+    items= []
+    for i in order_items:
+        item_obj  ={
+            "name":Pizza.objects.get(id=i['id']).name,
+            "quantity":i['qty'],
+            "unit_price":Pizza.objects.get(id=i['id']).price,            
+            "price":(i['price'] *i['qty'])
+        }
+        items.append(item_obj)
+    
+    pdf = render_to_pdf("baseApp/invoice.html",{"order":order,"items":items}) 
+    
+    
+        
+    return HttpResponse(pdf, content_type = "application/pdf")
 
 
     
