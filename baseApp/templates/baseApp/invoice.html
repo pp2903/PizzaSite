@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      header {
+        text-align: center;
+        padding: 10px;
+        background-color: #f0f0f0;
+      }
+
+      section {
+        margin-top: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      .total {
+        text-align: right;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Invoice</h1>
+      <p>{{order.date_of_order}}</p>
+    </header>
+
+    
+    <section>
+
+      <p><strong>Order ID: {{order.order_id}}</strong></p>
+
+      
+      <h2>Bill To:</h2>
+      <p>{{ order.first_name }} {{ order.last_name }}</p>
+      <p>{{ order.street }}</p>
+      <p>{{ order.city }}, {{order.state}}, {{order.zipcode}}</p>
+      <p>{{order.phone_number}}</p>
+    </section>
+
+    <br>
+
+
+
+    <section>
+      <h2>Invoice Details:</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{item.name}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.unit_price}}</td>
+            <td>{{item.price}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="total">Total:</td>
+            <td>
+              
+                
+              $ {% with slug=order.order_amount|slugify %}
+              {{ slug|slice:"0:-2" }}.{{ slug|slice:"-2:" }}
+            {% endwith %}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+
+    
+  </body>
+</html>
