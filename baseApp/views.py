@@ -8,7 +8,7 @@ from django. contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout
 import json
-from baseApp.models import Pizza
+from baseApp.models import Pizza, OrderItem
 from django.contrib.sites.shortcuts import get_current_site
 from Marks_Pizzeria.settings import KEY_ID,KEY_SECRET
 import razorpay
@@ -198,7 +198,11 @@ def handlerequest(request):
                     "unit_price":Pizza.objects.get(id=i['id']).price,
                     "price":(i['price'] *i['qty'])
                 }
-                items.append(item_obj)
+                items.append(item_obj)       
+                
+                OrderItem.objects.create(order=order_db,product= Pizza.objects.get(id=i['id']), quantity=i['qty'], price= Pizza.objects.get(id=i['id']).price)
+                
+                
             
             
             try:
