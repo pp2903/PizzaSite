@@ -64,11 +64,11 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,on_delete = models.CASCADE)
     product = models.ForeignKey(Pizza, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-    item_price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField(default=1)
+    item_price = models.IntegerField()
     
     
     
     def __str__(self):
         
-        return f"Order id:{self.order.order_id} with item {self.product} having quantity: {self.quantity} and price {self.item_price}"
+        return f"{self.order.order_id} : {self.product.name} and price {self.item_price}"
