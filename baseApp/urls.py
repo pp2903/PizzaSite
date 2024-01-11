@@ -13,6 +13,7 @@ urlpatterns = [
     path("cart/",base_views.cartView, name="cart-page"), 
     path('handlerequest/', base_views.handlerequest, name = 'handlerequest'),
     path('invoice/<str:id>/', base_views.invoice, name = 'invoice'),
+    path('my_orders', base_views.my_orders, name = 'my_orders'),
     
     #testing payment success and failure pages
     path('success/', base_views.test_successPage, name = 'success'),

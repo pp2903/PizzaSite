@@ -8,7 +8,7 @@ from django. contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout
 import json
-from baseApp.models import Pizza
+from baseApp.models import Pizza, OrderItem
 from django.contrib.sites.shortcuts import get_current_site
 from Marks_Pizzeria.settings import KEY_ID,KEY_SECRET
 import razorpay
@@ -198,7 +198,11 @@ def handlerequest(request):
                     "unit_price":Pizza.objects.get(id=i['id']).price,
                     "price":(i['price'] *i['qty'])
                 }
-                items.append(item_obj)
+                items.append(item_obj)     
+                
+                OrderItem.objects.create(order=order_db,product=Pizza.objects.get(id=i['id']),quantity=int(i['qty']),item_price=int(Pizza.objects.get(id=i['id']).price))
+                
+                
             
             
             try:
@@ -224,7 +228,7 @@ def handlerequest(request):
                 email.send(fail_silently=False)   
      
             
-           
+            print("Reached here")
             return render(request,"baseApp/paymentSuccess.html",{"order_id":order_db.order_id})
         except:
             
@@ -241,6 +245,48 @@ def render_to_pdf(template_src, context_dict={}):
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
     
+
+def invoice(request,id):   
+    
+    order = Order.objects.get(order_id=id)
+    order_items = json.loads(order.order_items)
+    items= []
+    for i in order_items:
+        item_obj  ={
+            "name":Pizza.objects.get(id=i['id']).name,
+            "quantity":i['qty'],
+            "unit_price":Pizza.objects.get(id=i['id']).price,            
+            "price":(i['price'] *i['qty'])
+        }
+        items.append(item_obj)
+    
+    pdf = render_to_pdf("baseApp/invoice.html",{"order":order,"items":items})         
+    return HttpResponse(pdf, content_type = "application/pdf")
+
+@login_required
+def my_orders(request):    
+    
+    print(request.user)
+    
+    orderData = OrderItem.objects.filter(order__user=request.user)
+    
+    
+    return render(request,"baseApp/my_orders.html",{"data":orderData})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # testing
@@ -266,25 +312,6 @@ def invoice_test(request):
 
 
 
-def invoice(request,id):   
-    
-    order = Order.objects.get(order_id=id)
-    order_items = json.loads(order.order_items)
-    items= []
-    for i in order_items:
-        item_obj  ={
-            "name":Pizza.objects.get(id=i['id']).name,
-            "quantity":i['qty'],
-            "unit_price":Pizza.objects.get(id=i['id']).price,            
-            "price":(i['price'] *i['qty'])
-        }
-        items.append(item_obj)
-    
-    pdf = render_to_pdf("baseApp/invoice.html",{"order":order,"items":items}) 
-    
-    
-        
-    return HttpResponse(pdf, content_type = "application/pdf")
 
 
     

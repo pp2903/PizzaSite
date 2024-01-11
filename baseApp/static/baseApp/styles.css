@@ -87,12 +87,23 @@ label{
 }
 
 
+
 .pizza-vector{
     margin-left: 10%;
     margin-top: 5%;
     width: 50%;
     opacity: 0;
+    margin: 90px 30px ;
+    
 }
+
+/* SIGN UP STYLES */
+
+.sign-up-container  .pizza-vector{
+    width: 70%;
+    
+}
+
 
 
 #signInText{
@@ -307,10 +318,22 @@ legend{
 #cart-empty-image{
     width: 80%;
 }
+
+
 .cart-prod-img{
-    max-width: 200px;
+    /* max-width: 200px; */
+    width: 150px;
 }
 
+@media (max-width:265px) {
+    .cart-prod-img{
+        width: 75px;
+    }
+
+    
+
+   
+}
 
 .cart-item-container{
 
@@ -371,3 +394,16 @@ legend{
     margin-bottom: 50px;
 }
 
+/* MY ORDERS PAGE */
+
+
+#my-orders-heading{
+
+}
+
+.my-orders-img{
+
+    width: 80px;
+    border-radius:20%;
+
+}
