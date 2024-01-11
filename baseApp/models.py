@@ -58,3 +58,17 @@ class Order(models.Model):
         if self.order_id is None and self.date_of_order and self.id:
             self.order_id = self.date_of_order.strftime('PAY2ME%Y%m%dODR') + str(self.id)
         return super().save(*args, **kwargs)
+    
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order,on_delete = models.CASCADE)
+    product = models.ForeignKey(Pizza, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    item_price = models.IntegerField()
+    
+    
+    
+    def __str__(self):
+        
+        return f"{self.order.order_id} : {self.product.name} and price {self.item_price}"
