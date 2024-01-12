@@ -268,7 +268,7 @@ def my_orders(request):
     
     print(request.user)
     
-    orderData = OrderItem.objects.filter(order__user=request.user)
+    orderData = OrderItem.objects.filter(order__user=request.user).order_by('-order__date_of_order')
     
     
     return render(request,"baseApp/my_orders.html",{"data":orderData})
