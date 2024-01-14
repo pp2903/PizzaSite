@@ -19,9 +19,10 @@ from io import BytesIO
 from Marks_Pizzeria import settings
 
 from django.core.mail import EmailMultiAlternatives
+from django.core.paginator import Paginator
 
-
-
+#caching implementation
+from django.views.decorators.cache import cache_page
 
 
 # Create your views here.
@@ -39,10 +40,9 @@ def about(request):
     return render(request,'baseApp/about.html')
 
 
-
+@cache_page(60*15)
 def menu(request):
     pizzas = Pizza.objects.all()
-    pizza = Pizza.objects.first()
     return render(request, 'baseApp/order.html',{'pizzas':pizzas})
 
 
@@ -76,8 +76,7 @@ def logoutView(request):
 def checkout(request):
     if(request.method == "POST"):
         
-        print('POST request executed')
-        print(request.POST)
+        
         order_items_json = json.loads(request.POST.get('order_items_json'))
         order_pizza_list = []
         order_total = 0
@@ -86,13 +85,12 @@ def checkout(request):
             pizza_item = {
                 "name":pizza_obj.name,
                 "quantity":item['qty'],
-                "price": item['qty']*item['price'],
+                "price": int(item['qty'])*int(item['price']),
                 "image_url":pizza_obj.image_url
             }
             order_pizza_list.append(pizza_item)            
             order_total+= int(item['qty']) * item['price']
-        print(order_pizza_list)
-        print("Order total: ", order_total)
+        
         #getting the order details
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -113,14 +111,13 @@ def checkout(request):
         #creating a new order and giving it an order ID
         order = Order.objects.create(user = usr,first_name=first_name,last_name=last_name,street=street,city=city,state=state,zipcode= zipcode,phone_number= phone_number,order_amount=order_total*100,order_items = request.POST.get('order_items_json'))
         order.save()
-        if usr is not None:
-            print("The user is",usr)
+        
         
         currency = 'INR'
         callback_URL = 'http://'+str(get_current_site(request))+'/handlerequest/'
         
         razorpay_order = razorpay_client.order.create(dict(amount=order_total*100, currency = currency,receipt = order.order_id))
-        print(razorpay_order['id'])
+        
         order.razorpay_order_id = razorpay_order['id']
         order.save()
         
@@ -169,7 +166,7 @@ def cartView(request):
 
         
         
-    print('printing from outside')
+    
     return render(request,"baseApp/cart.html",{"prod_obj_arr":prod_obj_arr})
 
 
@@ -228,7 +225,7 @@ def handlerequest(request):
                 email.send(fail_silently=False)   
      
             
-            print("Reached here")
+            
             return render(request,"baseApp/paymentSuccess.html",{"order_id":order_db.order_id})
         except:
             
@@ -266,12 +263,16 @@ def invoice(request,id):
 @login_required
 def my_orders(request):    
     
-    print(request.user)
-    
-    orderData = OrderItem.objects.filter(order__user=request.user)
     
     
-    return render(request,"baseApp/my_orders.html",{"data":orderData})
+    orderData = OrderItem.objects.filter(order__user=request.user).order_by('-order__date_of_order')
+    paginator = Paginator(orderData, 5)
+    
+    page_number = request.GET.get("page")
+    page_obj =paginator.get_page(page_number)
+    
+    
+    return render(request,"baseApp/my_orders.html",{"page_obj":page_obj})
 
 
 
