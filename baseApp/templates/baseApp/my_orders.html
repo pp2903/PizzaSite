@@ -1,80 +1,72 @@
-{% extends 'baseApp/index.html' %}
-{% load static %}
-{% load crispy_forms_tags %}
-
-
-{% block content %}
-
+{% extends 'baseApp/index.html' %} {% load static %} {% load crispy_forms_tags
+%} {% block content %}
 
 <div class="container">
-    <div id="heading-row" class="row my-4">
-        <div id="my-orders-heading" class="col col-12">
-            <p class="fs-1 fw-semibold text-center">
-                My Orders
-            </p>
-        </div>
+  <div id="heading-row" class="row my-4">
+    <div id="my-orders-heading" class="col col-12">
+      <p class="fs-1 fw-semibold text-center">My Orders</p>
     </div>
+  </div>
 
-
-
-    <div class="row text-center">
-        <div class="col col-4 col-md-3 fs-6 fw-medium text-decoration-underline">
-            Product
-        </div>
-        <div class="col col-2 col-md-3 fs-6 fw-medium text-decoration-underline">
-            Quantity
-        </div>
-        <div class="col col-3 fs-6 fw-medium text-decoration-underline">
-            Price
-        </div>
-
-        <div class="col col-3 fs-6 fw-medium  text-decoration-underline">
-            Status
-        </div>
+  <div class="row text-center">
+    <div class="col col-4 col-md-3 fs-6 fw-medium text-decoration-underline">
+      Product
     </div>
-    <br>
-    {% for ord_item in data %}
+    <div class="col col-2 col-md-3 fs-6 fw-medium text-decoration-underline">
+      Quantity
+    </div>
+    <div class="col col-3 fs-6 fw-medium text-decoration-underline">Price</div>
+
+    <div class="col col-3 fs-6 fw-medium text-decoration-underline">Status</div>
+  </div>
+  <br />
+  {% for ord_item in page_obj %}
+
+  <div class="row text-center align-items-center">
+    <div class="col col-4 col-md-3">
+      <p class="d-sm-block fw-semibold">{{ ord_item.product.name }}</p>
+      <img
+        class="my-orders-img"
+        src="{% static ord_item.product.image_url %}"
+        alt=""
+      />
+    </div>
+    <div class="col col-2 col-md-3">{{ ord_item.quantity }}</div>
+    <div class="col col-3">
+      <span class="fw-semibold"> &#8377;{{ ord_item.item_price }} </span>
+    </div>
+    <div class="col col-3">
+      <span class=""> Order Placed </span>
+    </div>
+  </div>
+  {% endfor %}
+  
+<div class="row my-4">
+
+
+  <div class="col col-12 text-center">
+
+      {% if page_obj.has_previous %}
+      <a class="btn btn-primary mx-2" href="?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+      
+      
+        <span class="current mx-2">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
     
-    <div class="row text-center align-items-center">
-        <div class="col col-4 col-md-3">
-            <p class="d-sm-block fw-semibold">
-
-                {{ ord_item.product.name }}
-            </p>
-            <img class="my-orders-img" src="{% static ord_item.product.image_url %}" alt="">
-
-        </div>
-        <div class="col col-2 col-md-3">
-            {{ ord_item.quantity }}
-        </div>
-        <div class="col col-3">
-            <span class="fw-semibold">
-
-                &#8377;{{ ord_item.item_price }}
-            </span>
-        </div>
-        <div class="col col-3">
-            <span class="">
-
-                Order Placed
-            </span>
-        </div>
-    </div>
-    {% endfor %}
-    <div class="row">
+        
+        {% if page_obj.has_next %}
+        <a class="btn btn-primary mx-2" href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
         
     </div>
-
+</div>
+  
 </div>
 
-
-
-{% endblock content %}
-
-
-{% block scripts %}
+{% endblock content %} {% block scripts %}
 
 <script src="{% static 'baseApp/my-orders.js' %}"></script>
-
 
 {% endblock scripts %}
