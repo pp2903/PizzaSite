@@ -40,7 +40,7 @@ def about(request):
     return render(request,'baseApp/about.html')
 
 
-@cache_page(60*15)
+# @cache_page(60*15)
 def menu(request):
     pizzas = Pizza.objects.all()
     return render(request, 'baseApp/order.html',{'pizzas':pizzas})
